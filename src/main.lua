@@ -34,8 +34,8 @@ end
 local function setupScreen()
     gpu.setForeground(0x000000)
     gpu.setBackground(0xffffff)
-    gpu.setResolution(80, 25)
-    gpu.setViewport(80, 25)
+    gpu.setResolution(80, 23)
+    gpu.setViewport(80, 23)
 end
 
 local function printBanner()
@@ -91,7 +91,7 @@ end
 ---@param lsCapacity number
 ---@param lsStorage number
 local function printLapotronicGraphic(lsCapacity, lsStorage)
-    printCapacityGraphic(lsCapacity, lsStorage, 20, 5, 3)
+    printCapacityGraphic(lsCapacity, lsStorage, 18, 5, 3)
 end
 
 ---Specialization to print the Power Substation graphic
@@ -136,8 +136,6 @@ local function printScreen(lsCapacity, lsStorage, lsInEU, lsOutEU, psCapacity, p
     print(string.format("  │       │   │ In:  %11.2f %sEU/t │                                        ", numToAdaptedScientificNotation(lsInEU)))
     print(string.format("  │       │   │ Out: %11.2f %sEU/t │                                        ", numToAdaptedScientificNotation(lsOutEU)))
     print(string.format("  │       │   └────────────────────────┘                                        "))
-    print(string.format("  │       │                                                                     "))
-    print(string.format("  │       │                                                                     "))
     print(string.format("  │       │                                                                     "))
     print(string.format(" ╔╧═══════╧╗                                                                    "))
     print(string.format(" ╚════O════╝                                                                    "))
