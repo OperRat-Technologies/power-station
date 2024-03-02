@@ -4,7 +4,7 @@ local scripts = {
     "config.lua",
     "gtPowerStorage.lua",
     "gui.lua",
-    "install.lua",
+    "setup.lua",
     "main.lua",
     "utils.lua",
     "uninstall.lua",
