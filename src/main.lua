@@ -1,18 +1,16 @@
-
 -- Configuration
 local readingTickInterval = 20
-local psLimitAlarm = 5
-local frequencyAlarm = 1015
+local enableAlarm = true
+local alarmPowerPercentageThreshold = 5
+local alarmWirelessFrequency = 1015
 
 -- Module imports
 local term = require("term")
 local component = require("component")
 local gpu = component.gpu
 
-component.redstone.setWirelessFrequency(frequencyAlarm)
-
-local GregTechMachine = { }
-GregTechMachine.new = function (proxy, inStr, outStr)
+local GregTechMachine = {}
+GregTechMachine.new = function(proxy, inStr, outStr)
     local self = {}
 
     self.proxy = proxy
@@ -50,23 +48,52 @@ GregTechMachine.new = function (proxy, inStr, outStr)
     function self.getEUStored()
         return self.proxy.getEUStored()
     end
-    
+
     function self.getEUCapacity()
         return self.proxy.getEUCapacity()
     end
-    
+
     function self.getEUAverageInput()
-        return self.extractNumberFromInformationString(self.clearSensorInformationString(self.searchSensorInformation(self.inStr)))
+        return self.extractNumberFromInformationString(self.clearSensorInformationString(self.searchSensorInformation(
+            self.inStr)))
     end
 
     function self.getEUAverageOutput()
-        return self.extractNumberFromInformationString(self.clearSensorInformationString(self.searchSensorInformation(self.outStr)))
+        return self.extractNumberFromInformationString(self.clearSensorInformationString(self.searchSensorInformation(
+            self.outStr)))
     end
-    
+
     return self
 end
 
 local substationProxy, lapotronicProxy
+
+-- Alarm
+local Alarm = {}
+Alarm.new = function(wirelessFrequency, machine)
+    local self = {}
+
+    self.wirelessFrequency = wirelessFrequency
+    self.machine = machine
+    self.enabled = true
+
+    component.redstone.setWirelessFrequency(wirelessFrequency)
+    component.redstone.setWirelessOutput(false)
+
+    function self.updateAlarm()
+        if self.enabled then
+            local psPercentage = (self.machine.getEUStored() / self.machine.getEUCapacity()) * 100
+            component.redstone.setWirelessOutput(psPercentage < alarmPowerPercentageThreshold)
+        end
+    end
+
+    function self.changeFrequency(newFrequency)
+        self.wirelessFrequency = newFrequency
+        component.redstone.setWirelessFrequency(newFrequency)
+    end
+
+    return self
+end
 
 -- loop through all components in the system
 for address, name in component.list() do
@@ -88,6 +115,9 @@ end
 local substation = GregTechMachine.new(substationProxy, "Average Input", "Average Output")
 local lapotronic = GregTechMachine.new(lapotronicProxy, "Avg EU IN", "Avg EU OUT")
 
+local psAlarm = Alarm.new(alarmWirelessFrequency, substation)
+psAlarm.enabled = enableAlarm
+
 ---Style setup
 local function setupScreen()
     gpu.setForeground(0x000000)
@@ -105,7 +135,7 @@ end
 ---@return number
 ---@return string
 local function numToAdaptedScientificNotation(n)
-    local exponents = {" ", "K", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q"}
+    local exponents = { " ", "K", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q" }
     local expId = 1
     while (n >= 1000) do
         expId = expId + 1
@@ -124,12 +154,12 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
     local lsPercentage = storage / capacity * 100
     local percentagePerLayer = 100 / layers
 
-    local fillingC = {"▓", "▒", "░"}
-    local fillingP = {0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0}
+    local fillingC = { "▓", "▒", "░" }
+    local fillingP = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
 
     local filledLayers = math.floor(lsPercentage / percentagePerLayer)
     gpu.fill(topX, topY + (layers - filledLayers), 5, filledLayers, "█")
-    
+
     if (filledLayers < layers) then
         local curPercentage = lsPercentage - (filledLayers * percentagePerLayer)
         local fillingChar = "?"
@@ -167,17 +197,12 @@ local function ticksToHHMMSS(ticks)
     return hours, minutes, seconds
 end
 
+
 local function choice(c, t, f)
     return c and t or f
 end
 
-local function shouldSoundAlarm(psCapacity, psStorage)
-    local psPercentage = (psStorage/psCapacity) * 100
-    component.redstone.setWirelessOutput(psPercentage < psLimitAlarm)
-end
-
-local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu)    
-
+local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu)
     local lsCapVal, lsCapMod = numToAdaptedScientificNotation(lsCapacity)
     local psCapVal, psCapMod = numToAdaptedScientificNotation(psCapacity)
 
@@ -185,7 +210,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     local psStoVal, psStoMod = numToAdaptedScientificNotation(psStorage)
 
     local lifeH, lifeM, lifeS = ticksToHHMMSS(math.abs(tickLife))
-    
+
     local euDiff = math.abs(inEu - outEu)
     local inEUVal, inEUMod = numToAdaptedScientificNotation(inEu)
     local outEUVal, outEUMod = numToAdaptedScientificNotation(outEu)
@@ -197,21 +222,27 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     print(string.format("  │       │   Lapotronic Supercapacitor    │       │   Power Substation         "))
     print(string.format("  │       │                                │       │                            "))
     print(string.format("  │       │   ┌ Capacity ──────────────┐   │       │ ┌ Capacity ──────────────┐ "))
-    print(string.format("  │       │   │ %18.2f %sEU │   │       │ │ %18.2f %sEU │ ", lsCapVal, lsCapMod, psCapVal, psCapMod))
+    print(string.format("  │       │   │ %18.2f %sEU │   │       │ │ %18.2f %sEU │ ", lsCapVal, lsCapMod, psCapVal,
+        psCapMod))
     print(string.format("  │       │   └────────────────────────┘   │       │ └────────────────────────┘ "))
     print(string.format("  │       │                                │       │                            "))
     print(string.format("  │       │   ┌ Storage ───────────────┐   │       │ ┌ Storage ───────────────┐ "))
-    print(string.format("  │       │   │ %18.2f %sEU │   │       │ │ %18.2f %sEU │ ", lsStoVal, lsStoMod, psStoVal, psStoMod))
+    print(string.format("  │       │   │ %18.2f %sEU │   │       │ │ %18.2f %sEU │ ", lsStoVal, lsStoMod, psStoVal,
+        psStoMod))
     print(string.format("  │       │   └────────────────────────┘   │       │ └────────────────────────┘ "))
     print(string.format("  │       │ ╔═════════════════════════════»│       │      .---.                 "))
     print(string.format("  │       │ ║                              └───────┘ (\\./)     \\.......-        "))
     print(string.format("  │       │ ║                                        >' '<  (__.'\"\"\"\"BP         "))
     print(string.format("  │       │ ║ ┌ Stats ───────────────────────────────\"-`-\"-\"──────────────────┐ "))
     print(string.format("  │       │ ║ │                                                               │ "))
-    print(string.format("  │       │ ║ │ Θ Battery Life:     %02d:%02d:%02d until fully %s           │ ", lifeH, lifeM, lifeS, untilFullyString))
-    print(string.format("  │       │ ║ │ ↑ Charging:     %6.2f %sEU/t                                  │ ", inEUVal, inEUMod))
-    print(string.format("  │       ╞»╝ │ Δ Difference:   %6.2f %sEU/t                                  │ ", diffEUVal, diffEUMod))
-    print(string.format("  │       │   │ ↓ Discharging:  %6.2f %sEU/t                                  │ ", outEUVal, outEUMod))
+    print(string.format("  │       │ ║ │ Θ Battery Life:     %02d:%02d:%02d until fully %s           │ ", lifeH, lifeM,
+        lifeS, untilFullyString))
+    print(string.format("  │       │ ║ │ ↑ Charging:     %6.2f %sEU/t                                  │ ", inEUVal,
+        inEUMod))
+    print(string.format("  │       ╞»╝ │ Δ Difference:   %6.2f %sEU/t                                  │ ", diffEUVal,
+        diffEUMod))
+    print(string.format("  │       │   │ ↓ Discharging:  %6.2f %sEU/t                                  │ ", outEUVal,
+        outEUMod))
     print(string.format(" ╔╧═══════╧╗  │                                                               │ "))
     print(string.format(" ╚════O════╝  └───────────────────────────────────────────────────────────────┘ "))
 
@@ -226,7 +257,6 @@ local lapotronicCapacity = lapotronic.getEUCapacity()
 local totalEUCapacity = substationCapacity + lapotronicCapacity
 
 while true do
-
     substation.updateSensorInfo()
     lapotronic.updateSensorInfo()
     local substationStored = substation.getEUStored()
@@ -242,7 +272,8 @@ while true do
     else
         tickLife = (totalEUCapacity - euSum) / euPerTickDiff
     end
-    shouldSoundAlarm(substationCapacity, substationStored)
+
+    psAlarm.updateAlarm()
 
 
     term.clear()
@@ -250,8 +281,6 @@ while true do
     printBanner()
     printScreen(lapotronicCapacity, lapotronicStored, substationCapacity, substationStored, tickLife, euIn, euOut)
 
----@diagnostic disable-next-line: undefined-field
+    ---@diagnostic disable-next-line: undefined-field
     os.sleep(20 / readingTickInterval)
-
 end
-
