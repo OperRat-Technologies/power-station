@@ -1,11 +1,15 @@
 
 -- Configuration
 local readingTickInterval = 20
+local psLimitAlarm = 5
+local frequencyAlarm = 1015
 
 -- Module imports
 local term = require("term")
 local component = require("component")
 local gpu = component.gpu
+
+component.redstone.setWirelessFrequency(frequencyAlarm)
 
 local GregTechMachine = { }
 GregTechMachine.new = function (proxy, inStr, outStr)
@@ -167,6 +171,15 @@ local function choice(c, t, f)
     return c and t or f
 end
 
+local function shouldSoundAlarm(psCapacity, psStorage)
+    local psPercentage = (psStorage/psCapacity) * 100
+    if (psPercentage < psLimitAlarm) then
+        component.redstone.setWirelessOutput(true)
+    else
+        component.redstone.setWirelessOutput(false)
+    end
+end
+
 local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu)    
 
     local lsCapVal, lsCapMod = numToAdaptedScientificNotation(lsCapacity)
@@ -233,6 +246,7 @@ while true do
     else
         tickLife = (totalEUCapacity - euSum) / euPerTickDiff
     end
+    shouldSoundAlarm(substationCapacity, substationStored)
 
 
     term.clear()
