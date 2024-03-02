@@ -97,7 +97,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
         lifeS, untilFullyString))
     print(string.format("  │       │ ║ │ ↑ Charging:     %6.2f %sEU/t                                  │ ", inEUVal,
         inEUMod))
-    print(string.format("  │       ╞»╝ │ Δ Difference:   %s%6.2f %sEU/t                                │ ", diffMathOperator,
+    print(string.format("  │       ╞»╝ │ Δ Difference:  %s%6.2f %sEU/t                                  │ ", diffMathOperator,
     diffEUVal, diffEUMod))
     print(string.format("  │       │   │ ↓ Discharging:  %6.2f %sEU/t                                  │ ", outEUVal,
         outEUMod))
