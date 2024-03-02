@@ -11,4 +11,4 @@ local config = {
     alarmWirelessFrequency = 1015
 }
 
-return { config = config }
+return config
