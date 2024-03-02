@@ -17,7 +17,7 @@ Software for our Power Station display integration, integrating a Power Substati
 # Installing
 Run the following command to download all required files:
 ```
-wget https://raw.githubusercontent.com/OperRat-Technologies/power-station/main/src/main.lua install.lua && install
+wget https://raw.githubusercontent.com/OperRat-Technologies/power-station/main/src/install.lua && install
 ```
 
 You can edit all the configuration inside the file `config.lua`.

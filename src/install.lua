@@ -10,6 +10,7 @@ local scripts = {
     "gui.lua",
     "utils.lua",
     "main.lua",
+    "uninstall.lua",
 }
 
 if #args >= 1 then
