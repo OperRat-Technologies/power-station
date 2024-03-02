@@ -67,11 +67,12 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
 
     local lifeH, lifeM, lifeS = utils.ticksToHHMMSS(math.abs(tickLife))
 
-    local euDiff = math.abs(inEu - outEu)
+    local euDiff = inEu - outEu
+    local euDiffAbs = math.abs(euDiff)
     local inEUVal, inEUMod = utils.numToAdaptedScientificNotation(inEu)
     local outEUVal, outEUMod = utils.numToAdaptedScientificNotation(outEu)
-    local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiff)
-    local diffMathOperator = utils.numMathOperator(diffEUVal)
+    local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiffAbs)
+    local diffMathOperator = utils.numMathOperator(euDiff)
 
     local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
 
