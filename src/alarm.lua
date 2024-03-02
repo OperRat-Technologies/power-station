@@ -27,3 +27,5 @@ Alarm.new = function(wirelessFrequency, machine)
 
     return self
 end
+
+return { Alarm = Alarm }

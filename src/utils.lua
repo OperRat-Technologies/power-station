@@ -23,3 +23,9 @@ local function numToAdaptedScientificNotation(n)
     end
     return n, exponents[expId]
 end
+
+return {
+    ticksToHHMMSS = ticksToHHMMSS,
+    choice = choice,
+    numToAdaptedScientificNotation = numToAdaptedScientificNotation
+}

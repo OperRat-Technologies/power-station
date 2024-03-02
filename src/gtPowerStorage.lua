@@ -55,3 +55,5 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
 
     return self
 end
+
+return { GTPowerStorage = GTPowerStorage }

@@ -105,3 +105,12 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     printLapotronicGraphic(lsCapacity, lsStorage)
     printSubstationGraphic(psCapacity, psStorage)
 end
+
+return {
+    setupScreen = setupScreen,
+    printBanner = printBanner,
+    printCapacityGraphic = printCapacityGraphic,
+    printLapotronicGraphic = printLapotronicGraphic,
+    printSubstationGraphic = printSubstationGraphic,
+    printScreen = printScreen
+}

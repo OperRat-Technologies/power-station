@@ -4,7 +4,7 @@ local component = require("component")
 
 local config = require("config")
 local alarm = require("alarm")
-local gtPS = require("gt_power_storage")
+local gtPS = require("gtPowerStorage")
 local gui = require("gui")
 
 local substationProxy, lapotronicProxy
@@ -31,7 +31,6 @@ local function getComponents()
         end
     end
 end
-
 
 local function setup()
     getComponents()

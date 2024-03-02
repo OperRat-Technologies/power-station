@@ -10,3 +10,5 @@ local config = {
     -- Frequency to send the alarm redstone signal
     alarmWirelessFrequency = 1015
 }
+
+return { config = config }
