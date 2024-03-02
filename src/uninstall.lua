@@ -7,7 +7,7 @@ local scripts = {
     "install.lua",
     "main.lua",
     "utils.lua",
-    "uninstall.lua"
+    "uninstall.lua",
 }
 
 for i = 1, #scripts do
