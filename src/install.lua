@@ -11,12 +11,12 @@ local scripts = {
     "main.lua",
 }
 
-if #args > 1 then
+if #args >= 1 then
     branch = args[1]
 else
     branch = "main"
 end
 
 for i = 1, #scripts do
-    shell.execute(string.format("wget -f %s/%s/%s", repo, branch, scripts[i]))
+    shell.execute(string.format("wget -f %s/%s/src/%s", repo, branch, scripts[i]))
 end
