@@ -7,24 +7,39 @@ Software for our Power Station display integration, integrating a Power Substati
 
 ![](/img/interface.png)
 
-# Usage
+# Required Setup
 
-You need to have an OpenComputers PC with 2 adapters connected to the interfaces of a Power Substation and a Lapotronic Supercapacitor. The code can auto-detect the interfaces, no major configuration is **required**.
+- Display with at least `80 x 23` characters of resolution (We're using a `5 x 3` multiblock Tier 2 display);
+- An `Adapter` connected to the `Power Substation Controller`;
+- An `Adapter` connected to the `Lapotronic Supercapacitor Controller`;
+- (For the Alarm) A `Redstone Card` with at least Tier 2;
 
-To start, download the script inside the computer:
+# Installing
+Run the following command to download all required files:
 ```
-wget https://raw.githubusercontent.com/OperRat-Technologies/power-station/main/src/main.lua interface.lua
-```
-
-## Optional: Configuration
-You can edit the reading interval on the top of the file `main.lua`:
-```lua
--- Configuration
-local readingTickInterval = 20
+wget https://raw.githubusercontent.com/OperRat-Technologies/power-station/main/src/main.lua install.lua && install
 ```
 
-## Running
-Just run the script inside the computer with
+You can edit all the configuration inside the file `config.lua`.
+
+**The computer will restart after all files are downloaded.**
+
+
+# Running
+Just run the main script with:
 ```
-./interface.lua
+main
+```
+
+# Updating
+To update the system, just reinstall it:
+```
+install
+```
+> **Beware**: This will overwrite your `config.lua` file
+
+# Uninstalling
+To remove all files from the computer:
+```
+uninstall
 ```
