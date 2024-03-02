@@ -67,10 +67,12 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
 
     local lifeH, lifeM, lifeS = utils.ticksToHHMMSS(math.abs(tickLife))
 
-    local euDiff = math.abs(inEu - outEu)
+    local euDiff = inEu - outEu
+    local euDiffAbs = math.abs(euDiff)
     local inEUVal, inEUMod = utils.numToAdaptedScientificNotation(inEu)
     local outEUVal, outEUMod = utils.numToAdaptedScientificNotation(outEu)
-    local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiff)
+    local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiffAbs)
+    local diffMathOperator = utils.numMathOperator(euDiff)
 
     local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
 
@@ -95,8 +97,8 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
         lifeS, untilFullyString))
     print(string.format("  │       │ ║ │ ↑ Charging:     %6.2f %sEU/t                                  │ ", inEUVal,
         inEUMod))
-    print(string.format("  │       ╞»╝ │ Δ Difference:   %6.2f %sEU/t                                  │ ", diffEUVal,
-        diffEUMod))
+    print(string.format("  │       ╞»╝ │ Δ Difference:  %s%6.2f %sEU/t                                  │ ", diffMathOperator,
+    diffEUVal, diffEUMod))
     print(string.format("  │       │   │ ↓ Discharging:  %6.2f %sEU/t                                  │ ", outEUVal,
         outEUMod))
     print(string.format(" ╔╧═══════╧╗  │                                                               │ "))
