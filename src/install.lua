@@ -5,7 +5,7 @@ local branch
 local scripts = {
     "alarm.lua",
     "config.lua",
-    "gt_power_storage.lua",
+    "gtPowerStorage.lua",
     "gui.lua",
     "utils.lua",
     "main.lua",
