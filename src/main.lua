@@ -173,11 +173,7 @@ end
 
 local function shouldSoundAlarm(psCapacity, psStorage)
     local psPercentage = (psStorage/psCapacity) * 100
-    if (psPercentage < psLimitAlarm) then
-        component.redstone.setWirelessOutput(true)
-    else
-        component.redstone.setWirelessOutput(false)
-    end
+    component.redstone.setWirelessOutput(psPercentage < psLimitAlarm)
 end
 
 local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu)    
