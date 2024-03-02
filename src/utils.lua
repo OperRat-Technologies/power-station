@@ -11,7 +11,7 @@ local function choice(c, t, f)
 end
 
 local function numMathOperator(n)
-    return n > 0 and "+" or (n < 0 and "-" or "")
+    return choice(n > 0, "+", choice(n < 0, "-", " "))
 end
 
 ---Transforms a number into a "Scientific-like" notation, in the sense that values can actually be greater than 1, the limit is 1000
@@ -26,10 +26,6 @@ local function numToAdaptedScientificNotation(n)
         n = n / 1000
     end
     return n, exponents[expId]
-end
-
-local function choice(c, t, f)
-    return c and t or f
 end
 
 return {
