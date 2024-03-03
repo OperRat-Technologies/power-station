@@ -1,9 +1,16 @@
 local function ticksToHHMMSS(ticks)
     local seconds = math.floor(ticks / 20)
+
+    local days = math.floor(seconds / 86400)
+    seconds = seconds - (days * 86400)
+
     local hours = math.floor(seconds / 3600)
-    local minutes = math.floor((seconds - (hours * 3600)) / 60)
-    local seconds = seconds - (hours * 3600) - (minutes * 60)
-    return hours, minutes, seconds
+    seconds = seconds - (hours * 3600)
+
+    local minutes = math.floor(seconds / 60)
+    seconds = seconds - (minutes * 60)
+
+    return days, hours, minutes, seconds
 end
 
 local function choice(c, t, f)

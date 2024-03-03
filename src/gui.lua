@@ -65,7 +65,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     local lsStoVal, lsStoMod = utils.numToAdaptedScientificNotation(lsStorage)
     local psStoVal, psStoMod = utils.numToAdaptedScientificNotation(psStorage)
 
-    local lifeH, lifeM, lifeS = utils.ticksToHHMMSS(math.abs(tickLife))
+    local lifeD, lifeH, lifeM, lifeS = utils.ticksToHHMMSS(math.abs(tickLife))
 
     local euDiff = inEu - outEu
     local euDiffAbs = math.abs(euDiff)
@@ -93,8 +93,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     print(string.format("  │       │ ║                                        >' '<  (__.'\"\"\"\"BP         "))
     print(string.format("  │       │ ║ ┌ Stats ───────────────────────────────\"-`-\"-\"──────────────────┐ "))
     print(string.format("  │       │ ║ │                                                               │ "))
-    print(string.format("  │       │ ║ │ Θ Battery Life:     %02d:%02d:%02d until fully %s           │ ", lifeH, lifeM,
-        lifeS, untilFullyString))
+    print(string.format("  │       │ ║ │ Θ Battery Life: %2dd %02d:%02d:%02d until fully %s           │ ", lifeD, lifeH, lifeM, lifeS, untilFullyString))
     print(string.format("  │       │ ║ │ ↑ Charging:     %6.2f %sEU/t                                  │ ", inEUVal,
         inEUMod))
     print(string.format("  │       ╞»╝ │ Δ Difference:  %s%6.2f %sEU/t                                  │ ", diffMathOperator,
