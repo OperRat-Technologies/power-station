@@ -7,6 +7,7 @@ local scripts = {
     "setup.lua",
     "main.lua",
     "utils.lua",
+    "commonInterface.lua",
     "uninstall.lua",
 }
 

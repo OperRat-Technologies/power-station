@@ -1,17 +1,48 @@
 local component = require("component")
 local utils = require("utils")
 local gpu = component.gpu
+local ci = require("commonInterface")
 
-local function setupScreen()
-    gpu.setForeground(0x000000)
-    gpu.setBackground(0xffffff)
-    gpu.setResolution(80, 23)
-    gpu.setViewport(80, 23)
-end
+local screen = ci.Screen(
+    23,
+    80,
+    0xffffff,
+    0x000000,
+    [[███▓▓▓▒▒▒░░░ ratOS » Power Station Control                                      ]],
+    [[  ┌───────┐                                ┌───────┐                            ]],
+    [[  │       │   Lapotronic Supercapacitor    │       │   Power Substation         ]],
+    [[  │       │                                │       │                            ]],
+    [[  │       │   ┌ Capacity ──────────────┐   │       │ ┌ Capacity ──────────────┐ ]],
+    [[  │       │   │ %18.2f %s           EU │   │       │ │ %18.2f %s           EU │ ]],
+    [[  │       │   └────────────────────────┘   │       │ └────────────────────────┘ ]],
+    [[  │       │                                │       │                            ]],
+    [[  │       │   ┌ Storage ───────────────┐   │       │ ┌ Storage ───────────────┐ ]],
+    [[  │       │   │ %18.2f %s           EU │   │       │ │ %18.2f %s           EU │ ]],
+    [[  │       │   └────────────────────────┘   │       │ └────────────────────────┘ ]],
+    [[  │       │ ╔═════════════════════════════»│       │      .---.                 ]],
+    [[  │       │ ║                              └───────┘ (\./)     \.......-        ]],
+    [[  │       │ ║                                        >' '<  (__.'""""BP         ]],
+    [[  │       │ ║ ┌ Stats ───────────────────────────────"-`-"-"──────────────────┐ ]],
+    [[  │       │ ║ │                                                               │ ]],
+    [[  │       │ ║ │ Θ Battery Life:  XXd XX:XX:XX until fully discharged          │ ]],
+    [[  │       │ ║ │ ↑ Charging:      XXX.XX ?EU/t                                 │ ]],
+    [[  │       ╞»╝ │ Δ Difference:   +XXX.XX ?EU/t                                 │ ]],
+    [[  │       │   │ ↓ Discharging:   XXX.XX ?EU/t                                 │ ]],
+    [[ ╔╧═══════╧╗  │                                                               │ ]],
+    [[ ╚════O════╝  └───────────────────────────────────────────────────────────────┘ ]],
+    [[                                                                                ]]
+)
 
-local function printBanner()
-    print("███▓▓▓▒▒▒░░░ ratOS » Power Station Control                                      ")
-end
+local pLapotronicCapacity = screen.registerParam(ci.Param(6, 17, 20, "%18.2f %s"))
+local pLapotronicStorage = screen.registerParam(ci.Param(10, 17, 20, "%18.2f %s"))
+
+local pSubstationCapacity = screen.registerParam(ci.Param(6, 56, 20, "%18.2f %s"))
+local pSubstationStorage = screen.registerParam(ci.Param(10, 56, 20, "%18.2f %s"))
+
+local pBatteryLife = screen.registerParam(ci.Param(17, 34, 35, "%2dd %02d:%02d:%02d until fully %s"))
+local pCharging = screen.registerParam(ci.Param(18, 34, 8, "%6.2f %s"))
+local pDifference = screen.registerParam(ci.Param(19, 33, 9, "%7.2f %s"))
+local pDischarging = screen.registerParam(ci.Param(20, 34, 8, "%6.2f %s"))
 
 ---Prints the capacity graphic, starting from the bottom
 ---@param capacity number
@@ -27,6 +58,7 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
     local fillingP = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
 
     local filledLayers = math.floor(lsPercentage / percentagePerLayer)
+    local emptyLayers = layers - filledLayers
     gpu.fill(topX, topY + (layers - filledLayers), 5, filledLayers, "█")
 
     if (filledLayers < layers) then
@@ -41,6 +73,10 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
         end
 
         gpu.fill(topX, topY + (layers - filledLayers - 1), 5, 1, fillingChar)
+    end
+
+    if (emptyLayers > 0) then
+        gpu.fill(topX, topY, 5, emptyLayers, " ")
     end
 end
 
@@ -58,6 +94,12 @@ local function printSubstationGraphic(psCapacity, psStorage)
     printCapacityGraphic(psCapacity, psStorage, 10, 46, 3)
 end
 
+local function setupScreen()
+    screen.assertScreenSize()
+    screen.printBackground()
+    screen.clearAllParams()
+end
+
 local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu)
     local lsCapVal, lsCapMod = utils.numToAdaptedScientificNotation(lsCapacity)
     local psCapVal, psCapMod = utils.numToAdaptedScientificNotation(psCapacity)
@@ -68,40 +110,20 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     local lifeD, lifeH, lifeM, lifeS = utils.ticksToHHMMSS(math.abs(tickLife))
 
     local euDiff = inEu - outEu
-    local euDiffAbs = math.abs(euDiff)
     local inEUVal, inEUMod = utils.numToAdaptedScientificNotation(inEu)
     local outEUVal, outEUMod = utils.numToAdaptedScientificNotation(outEu)
-    local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiffAbs)
-    local diffMathOperator = utils.numMathOperator(euDiff)
+    local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiff)
 
     local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
 
-    print(string.format("  ┌───────┐                                ┌───────┐                            "))
-    print(string.format("  │       │   Lapotronic Supercapacitor    │       │   Power Substation         "))
-    print(string.format("  │       │                                │       │                            "))
-    print(string.format("  │       │   ┌ Capacity ──────────────┐   │       │ ┌ Capacity ──────────────┐ "))
-    print(string.format("  │       │   │ %18.2f %sEU │   │       │ │ %18.2f %sEU │ ", lsCapVal, lsCapMod, psCapVal,
-        psCapMod))
-    print(string.format("  │       │   └────────────────────────┘   │       │ └────────────────────────┘ "))
-    print(string.format("  │       │                                │       │                            "))
-    print(string.format("  │       │   ┌ Storage ───────────────┐   │       │ ┌ Storage ───────────────┐ "))
-    print(string.format("  │       │   │ %18.2f %sEU │   │       │ │ %18.2f %sEU │ ", lsStoVal, lsStoMod, psStoVal,
-        psStoMod))
-    print(string.format("  │       │   └────────────────────────┘   │       │ └────────────────────────┘ "))
-    print(string.format("  │       │ ╔═════════════════════════════»│       │      .---.                 "))
-    print(string.format("  │       │ ║                              └───────┘ (\\./)     \\.......-        "))
-    print(string.format("  │       │ ║                                        >' '<  (__.'\"\"\"\"BP         "))
-    print(string.format("  │       │ ║ ┌ Stats ───────────────────────────────\"-`-\"-\"──────────────────┐ "))
-    print(string.format("  │       │ ║ │                                                               │ "))
-    print(string.format("  │       │ ║ │ Θ Battery Life: %2dd %02d:%02d:%02d until fully %s           │ ", lifeD, lifeH, lifeM, lifeS, untilFullyString))
-    print(string.format("  │       │ ║ │ ↑ Charging:     %6.2f %sEU/t                                  │ ", inEUVal,
-        inEUMod))
-    print(string.format("  │       ╞»╝ │ Δ Difference:  %s%6.2f %sEU/t                                  │ ", diffMathOperator,
-    diffEUVal, diffEUMod))
-    print(string.format("  │       │   │ ↓ Discharging:  %6.2f %sEU/t                                  │ ", outEUVal,
-        outEUMod))
-    print(string.format(" ╔╧═══════╧╗  │                                                               │ "))
-    print(string.format(" ╚════O════╝  └───────────────────────────────────────────────────────────────┘ "))
+    pLapotronicCapacity.print(lsCapVal, lsCapMod)
+    pSubstationCapacity.print(psCapVal, psCapMod)
+    pLapotronicStorage.print(lsStoVal, lsStoMod)
+    pSubstationStorage.print(psStoVal, psStoMod)
+    pBatteryLife.print(lifeD, lifeH, lifeM, lifeS, untilFullyString)
+    pCharging.print(inEUVal, inEUMod)
+    pDifference.print(diffEUVal, diffEUMod)
+    pDischarging.print(outEUVal, outEUMod)
 
     printLapotronicGraphic(lsCapacity, lsStorage)
     printSubstationGraphic(psCapacity, psStorage)
@@ -109,7 +131,6 @@ end
 
 return {
     setupScreen = setupScreen,
-    printBanner = printBanner,
     printCapacityGraphic = printCapacityGraphic,
     printLapotronicGraphic = printLapotronicGraphic,
     printSubstationGraphic = printSubstationGraphic,
