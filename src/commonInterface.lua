@@ -1,6 +1,6 @@
-
 local term = require("term")
-local gpu = require("gpu")
+local component = require("component")
+local gpu = component.gpu
 
 ---Class for controlling a printable parameter inside the interface
 ---@param row number
@@ -16,7 +16,7 @@ function CIParam(row, col, length, format)
         format = format
     }
 
-    local function setCursor()
+    function self.setCursor()
         term.setCursor(col, row)
     end
     
