@@ -42,7 +42,7 @@ function CIScreen(rows, cols, bgColor, fgColor, ...)
         cols = cols,
         bgColor = bgColor,
         fgColor = fgColor,
-        background = ...,
+        background = {...},
         params = {}
     }
 
@@ -55,8 +55,8 @@ function CIScreen(rows, cols, bgColor, fgColor, ...)
 
     function self.printBackground()
         self.assertScreenSize()
-        term.setCursor(1, 1)
         for i = 1, #self.background do
+            term.setCursor(1, i)
             term.write(self.background[i], false)
         end
     end
