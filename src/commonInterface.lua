@@ -36,14 +36,13 @@ end
 ---@param cols number
 ---@param bgColor number
 ---@param fgColor number
----@param background string
-function CIScreen(rows, cols, bgColor, fgColor, background)
+function CIScreen(rows, cols, bgColor, fgColor, ...)
     local self = {
         rows = rows,
         cols = cols,
         bgColor = bgColor,
         fgColor = fgColor,
-        background = background,
+        background = ...,
         params = {}
     }
 
@@ -57,7 +56,9 @@ function CIScreen(rows, cols, bgColor, fgColor, background)
     function self.printBackground()
         self.assertScreenSize()
         term.setCursor(1, 1)
-        term.write(background)
+        for i = 1, #self.background do
+            term.write(self.background[i], false)
+        end
     end
 
     function self.registerParam(param)
