@@ -58,6 +58,7 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
     local fillingP = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
 
     local filledLayers = math.floor(lsPercentage / percentagePerLayer)
+    local emptyLayers = layers - filledLayers
     gpu.fill(topX, topY + (layers - filledLayers), 5, filledLayers, "█")
 
     if (filledLayers < layers) then
@@ -72,6 +73,10 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
         end
 
         gpu.fill(topX, topY + (layers - filledLayers - 1), 5, 1, fillingChar)
+    end
+
+    if (emptyLayers > 0) then
+        gpu.fill(topX, topY, 5, emptyLayers, " ")
     end
 end
 
