@@ -17,7 +17,7 @@ function AverageValue(count)
     function self.add(value)
         table.insert(self.values, value)
         if (#self.values > self.count) then
-            self.values = table.remove(self.values, 1)
+            table.remove(self.values, 1)
         end
         self.calculateAverage()
     end
