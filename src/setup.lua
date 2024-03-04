@@ -12,6 +12,7 @@ local scripts = {
     "main.lua",
     "uninstall.lua",
     "commonInterface.lua",
+    "averageValue.lua",
 }
 
 if #args >= 1 then
