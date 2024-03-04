@@ -7,7 +7,6 @@ local gpu = component.gpu
 ---@param col number
 ---@param length number
 ---@param format string
----@return table
 function CIParam(row, col, length, format)
     local self = {
         row = row,
@@ -48,12 +47,15 @@ function CIScreen(rows, cols, bgColor, fgColor, background)
         params = {}
     }
 
-    gpu.setForeground(self.fgColor)
-    gpu.setBackground(self.bgColor)
-    gpu.setResolution(self.cols, self.rows)
-    gpu.setViewport(self.cols, self.rows)
+    function self.assertScreenSize()
+        gpu.setForeground(self.fgColor)
+        gpu.setBackground(self.bgColor)
+        gpu.setResolution(self.cols, self.rows)
+        gpu.setViewport(self.cols, self.rows)
+    end
 
     function self.printBackground()
+        self.assertScreenSize()
         term.setCursor(1, 1)
         term.write(background)
     end

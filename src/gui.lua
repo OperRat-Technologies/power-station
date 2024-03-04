@@ -90,6 +90,7 @@ local function printSubstationGraphic(psCapacity, psStorage)
 end
 
 local function setupScreen()
+    screen.assertScreenSize()
     screen.printBackground()
     screen.clearAllParams()
 end
