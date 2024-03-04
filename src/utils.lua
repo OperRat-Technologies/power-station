@@ -28,7 +28,7 @@ end
 local function numToAdaptedScientificNotation(n)
     local exponents = { " ", "K", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q" }
     local expId = 1
-    while (n >= 1000) do
+    while (math.abs(n) >= 1000) do
         expId = expId + 1
         n = n / 1000
     end

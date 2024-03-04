@@ -68,7 +68,6 @@ local function loop()
     psAlarm.updateAlarm()
 
     term.clear()
-    gui.printBanner()
     gui.printScreen(lapotronicCapacity, lapotronicStored, substationCapacity, substationStored, tickLife, euIn, euOut)
 
     ---@diagnostic disable-next-line: undefined-field
