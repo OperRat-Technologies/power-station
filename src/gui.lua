@@ -26,7 +26,7 @@ local screen = ci.Screen(
     [[  │       │ ║ │                                                               │ ]],
     [[  │       │ ║ │ Θ Battery Life:  XXd XX:XX:XX until fully discharged          │ ]],
     [[  │       │ ║ │ ↑ Charging:      XXX.XX ?EU/t                                 │ ]],
-    [[  │       ╞»╝ │ Δ Difference:   +XXX.XX ?EU/t                                 │ ]],
+    [[  │       ╞»╝ │ Δ Difference:   +XXX.XX ?EU/t (Avg)    +XXX.XX ?EU/t (Real)   │ ]],
     [[  │       │   │ ↓ Discharging:   XXX.XX ?EU/t                                 │ ]],
     [[ ╔╧═══════╧╗  │                                                               │ ]],
     [[ ╚════O════╝  └───────────────────────────────────────────────────────────────┘ ]],
@@ -41,7 +41,8 @@ local pSubstationStorage = screen.registerParam(ci.Param(10, 56, 20, "%18.2f %s"
 
 local pBatteryLife = screen.registerParam(ci.Param(17, 34, 35, "%2dd %02d:%02d:%02d until fully %s"))
 local pCharging = screen.registerParam(ci.Param(18, 34, 8, "%6.2f %s"))
-local pDifference = screen.registerParam(ci.Param(19, 33, 9, "%7.2f %s"))
+local pDifferenceAvg = screen.registerParam(ci.Param(19, 33, 9, "%7.2f %s"))
+local pDifferenceReal = screen.registerParam(ci.Param(19, 56, 9, "%7.2f %s"))
 local pDischarging = screen.registerParam(ci.Param(20, 34, 8, "%6.2f %s"))
 
 ---Prints the capacity graphic, starting from the bottom
@@ -100,7 +101,7 @@ local function setupScreen()
     screen.clearAllParams()
 end
 
-local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu)
+local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLife, inEu, outEu, diffAvg)
     local lsCapVal, lsCapMod = utils.numToAdaptedScientificNotation(lsCapacity)
     local psCapVal, psCapMod = utils.numToAdaptedScientificNotation(psCapacity)
 
@@ -112,6 +113,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     local euDiff = inEu - outEu
     local inEUVal, inEUMod = utils.numToAdaptedScientificNotation(inEu)
     local outEUVal, outEUMod = utils.numToAdaptedScientificNotation(outEu)
+    local diffEUAvgVal, diffEUAvgMod = utils.numToAdaptedScientificNotation(diffAvg)
     local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiff)
 
     local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
@@ -122,7 +124,8 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     pSubstationStorage.print(psStoVal, psStoMod)
     pBatteryLife.print(lifeD, lifeH, lifeM, lifeS, untilFullyString)
     pCharging.print(inEUVal, inEUMod)
-    pDifference.print(diffEUVal, diffEUMod)
+    pDifferenceAvg.print(diffEUAvgVal, diffEUAvgMod)
+    pDifferenceReal.print(diffEUVal, diffEUMod)
     pDischarging.print(outEUVal, outEUMod)
 
     printLapotronicGraphic(lsCapacity, lsStorage)

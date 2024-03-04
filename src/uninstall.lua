@@ -9,6 +9,7 @@ local scripts = {
     "utils.lua",
     "commonInterface.lua",
     "uninstall.lua",
+    "averageValue.lua",
 }
 
 for i = 1, #scripts do

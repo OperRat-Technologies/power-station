@@ -6,12 +6,14 @@ local config = require("config")
 local alarm = require("alarm")
 local gtPS = require("gtPowerStorage")
 local gui = require("gui")
+local av = require("averageValue")
 
 local substationProxy, lapotronicProxy
 local substation, lapotronic
 local psAlarm
 
 local substationCapacity, lapotronicCapacity, totalEUCapacity
+local euPerTickDiffAvg = av.AverageValue(config.avgEntryCount)
 
 local function getComponents()
     -- loop through all components in the system
@@ -58,15 +60,16 @@ local function loop()
     local euIn = lapotronic.getEUAverageInput()
     local euOut = substation.getEUAverageOutput()
     local euPerTickDiff = euIn - euOut
+    euPerTickDiffAvg.add(euPerTickDiff)
     local tickLife = -1
     if (euPerTickDiff < 0) then
-        tickLife = euSum / math.abs(euPerTickDiff)
+        tickLife = euSum / math.abs(euPerTickDiffAvg.avg)
     else
-        tickLife = (totalEUCapacity - euSum) / euPerTickDiff
+        tickLife = (totalEUCapacity - euSum) / euPerTickDiffAvg.avg
     end
 
     psAlarm.updateAlarm()
-    gui.printScreen(lapotronicCapacity, lapotronicStored, substationCapacity, substationStored, tickLife, euIn, euOut)
+    gui.printScreen(lapotronicCapacity, lapotronicStored, substationCapacity, substationStored, tickLife, euIn, euOut, euPerTickDiffAvg.avg)
 
     ---@diagnostic disable-next-line: undefined-field
     os.sleep(20 / config.readingTickInterval)

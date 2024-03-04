@@ -17,10 +17,6 @@ local function choice(c, t, f)
     return c and t or f
 end
 
-local function numMathOperator(n)
-    return choice(n > 0, "+", choice(n < 0, "-", " "))
-end
-
 ---Transforms a number into a "Scientific-like" notation, in the sense that values can actually be greater than 1, the limit is 1000
 ---@param n number
 ---@return number
@@ -38,6 +34,5 @@ end
 return {
     ticksToHHMMSS = ticksToHHMMSS,
     choice = choice,
-    numToAdaptedScientificNotation = numToAdaptedScientificNotation,
-    numMathOperator = numMathOperator
+    numToAdaptedScientificNotation = numToAdaptedScientificNotation
 }

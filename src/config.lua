@@ -2,6 +2,8 @@
 local config = {
     -- Tick interval between measurements. 20 ticks measure to 1 second
     readingTickInterval = 20,
+    -- Number of entries to use when calculating the eu difference average
+    avgEntryCount = 5,
 
     -- Enable power output to a WR-CBE channel if the power level falls below a certain threshold
     enableAlarm = true,
