@@ -29,7 +29,7 @@ local screen = ci.Screen(
     [[  │       ╞»╝ │ Δ Difference:   +XXX.XX ?EU/t (Avg)    +XXX.XX ?EU/t (Real)   │ ]],
     [[  │       │   │ ↓ Discharging:   XXX.XX ?EU/t                                 │ ]],
     [[ ╔╧═══════╧╗  │                                                               │ ]],
-    [[ ╚════O════╝  └───────────────────────────────────────────────────────────────┘ ]],
+    [[ ╚═%s     ═╝  └───────────────────────────────────────────────────────────────┘ ]],
     [[                                                                                ]]
 )
 
@@ -44,6 +44,8 @@ local pCharging = screen.registerParam(ci.Param(18, 34, 8, "%6.2f %s"))
 local pDifferenceAvg = screen.registerParam(ci.Param(19, 33, 9, "%7.2f %s"))
 local pDifferenceReal = screen.registerParam(ci.Param(19, 56, 9, "%7.2f %s"))
 local pDischarging = screen.registerParam(ci.Param(20, 34, 8, "%6.2f %s"))
+
+local pLapotronicPercentage = screen.registerParam(ci.Param(22, 4, 7, "%s"))
 
 ---Prints the capacity graphic, starting from the bottom
 ---@param capacity number
@@ -118,6 +120,8 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
 
     local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
 
+    local percentageLapotronic = (lsStorage/lsCapacity) * 100
+
     pLapotronicCapacity.print(lsCapVal, lsCapMod)
     pSubstationCapacity.print(psCapVal, psCapMod)
     pLapotronicStorage.print(lsStoVal, lsStoMod)
@@ -127,6 +131,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     pDifferenceAvg.print(diffEUAvgVal, diffEUAvgMod)
     pDifferenceReal.print(diffEUVal, diffEUMod)
     pDischarging.print(outEUVal, outEUMod)
+    pLapotronicPercentage.print(utils.centeredString(string.format("%5.2f%%", percentageLapotronic), 7, "═"))
 
     printLapotronicGraphic(lsCapacity, lsStorage)
     printSubstationGraphic(psCapacity, psStorage)
