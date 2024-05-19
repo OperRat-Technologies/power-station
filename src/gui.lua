@@ -20,8 +20,8 @@ local screen = ci.Screen(
     [[  │       │   │ %18.2f %s           EU │   │       │ │ %18.2f %s           EU │ ]],
     [[  │       │   └────────────────────────┘   │       │ └────────────────────────┘ ]],
     [[  │       │ ╔═════════════════════════════»│       │      .---.                 ]],
-    [[  │       │ ║                              └───────┘ (\./)     \.......-        ]],
-    [[  │       │ ║                                        >' '<  (__.'""""BP         ]],
+    [[  │       │ ║                             ╔╧═══════╧╗(\./)     \.......-        ]],
+    [[  │       │ ║                             ╚═%s     ═╝>' '<  (__.'""""BP         ]],
     [[  │       │ ║ ┌ Stats ───────────────────────────────"-`-"-"──────────────────┐ ]],
     [[  │       │ ║ │                                                               │ ]],
     [[  │       │ ║ │ Θ Battery Life:  XXd XX:XX:XX until fully discharged          │ ]],
@@ -46,6 +46,7 @@ local pDifferenceReal = screen.registerParam(ci.Param(19, 56, 9, "%7.2f %s"))
 local pDischarging = screen.registerParam(ci.Param(20, 34, 8, "%6.2f %s"))
 
 local pLapotronicPercentage = screen.registerParam(ci.Param(22, 4, 7, "%s"))
+local pSubstationPercentage = screen.registerParam(ci.Param(14, 45, 7, "%s"))
 
 ---Prints the capacity graphic, starting from the bottom
 ---@param capacity number
@@ -121,6 +122,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
 
     local percentageLapotronic = (lsStorage/lsCapacity) * 100
+    local percentageSubstation = (psStorage/psCapacity) * 100
 
     pLapotronicCapacity.print(lsCapVal, lsCapMod)
     pSubstationCapacity.print(psCapVal, psCapMod)
@@ -132,6 +134,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     pDifferenceReal.print(diffEUVal, diffEUMod)
     pDischarging.print(outEUVal, outEUMod)
     pLapotronicPercentage.print(utils.centeredString(string.format("%5.2f%%", percentageLapotronic), 7, "═"))
+    pSubstationPercentage.print(utils.centeredString(string.format("%5.2f%%", percentageSubstation), 7, "═"))
 
     printLapotronicGraphic(lsCapacity, lsStorage)
     printSubstationGraphic(psCapacity, psStorage)
