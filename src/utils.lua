@@ -31,12 +31,6 @@ local function numToAdaptedScientificNotation(n)
     return n, exponents[expId]
 end
 
-return {
-    ticksToHHMMSS = ticksToHHMMSS,
-    choice = choice,
-    numToAdaptedScientificNotation = numToAdaptedScientificNotation
-}
-
 ---Format a string for it to be centralized
 ---@param formattedString string
 ---@param width number
@@ -51,3 +45,10 @@ local function centeredString(formattedString, width, emptyChar)
     -- Construct the centered string
     return string.rep(emptyChar, leftPadding) .. formattedString .. string.rep(emptyChar, rightPadding)
 end
+
+return {
+    ticksToHHMMSS = ticksToHHMMSS,
+    choice = choice,
+    numToAdaptedScientificNotation = numToAdaptedScientificNotation,
+    centeredString = centeredString
+}
