@@ -19,7 +19,7 @@ local config = {
     -- Power percentage threshold to activate the turbine
     minPowerPercentageThreshold = 20,
     -- Frequency to send the turbine redstone signal
-    alarmWirelessFrequency = 1016
+    turbineWirelessFrequency = 1016
 }
 
 return config
