@@ -7,10 +7,12 @@ local alarm = require("alarm")
 local gtPS = require("gtPowerStorage")
 local gui = require("gui")
 local av = require("averageValue")
+local turbine = require("turbine")
 
 local substationProxy, lapotronicProxy
 local substation, lapotronic
 local psAlarm
+local turbineControl
 
 local substationCapacity, lapotronicCapacity, totalEUCapacity
 local euPerTickDiffAvg = av.AverageValue(config.avgEntryCount)
@@ -48,6 +50,9 @@ local function setup()
     substationCapacity = substation.getEUCapacity()
     lapotronicCapacity = lapotronic.getEUCapacity()
     totalEUCapacity = substationCapacity + lapotronicCapacity
+
+    turbineControl = turbine.Turbine.new(config.turbineWirelessFrequency, totalEUCapacity)
+    turbineControl.enabled = enableTurbineControl
 end
 
 local function loop()
@@ -69,6 +74,7 @@ local function loop()
     end
 
     psAlarm.updateAlarm()
+    turbineControl.updateTurbine(euSum)
     gui.printScreen(lapotronicCapacity, lapotronicStored, substationCapacity, substationStored, tickLife, euIn, euOut, euPerTickDiffAvg.avg)
 
     ---@diagnostic disable-next-line: undefined-field
