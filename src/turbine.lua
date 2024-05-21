@@ -17,11 +17,11 @@ Turbine.new = function(wirelessFrequency, totalEuCapacity)
             return
         end
             
-        local psPercentage = (totalEUStored / self.totalEuCapacity) * 100
+        local euPercentage = (totalEUStored / self.totalEuCapacity) * 100
             
-        if psPercentage < minPowerPercentageThreshold then
+        if euPercentage < minPowerPercentageThreshold then
             component.redstone.setWirelessOutput(true)
-        elseif psPercentage > maxPowerPercentageThreshold then
+        elseif euPercentage > maxPowerPercentageThreshold then
             component.redstone.setWirelessOutput(false)
         end
     end
