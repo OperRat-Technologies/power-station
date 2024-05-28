@@ -8,8 +8,6 @@ Turbine.new = function(totalEuCapacity)
     self.totalEuCapacity = totalEuCapacity
     self.enabled = true
 
-    component.redstone.setWirelessOutput(false)
-
     function self.updateTurbine(totalEUStored)
         if not self.enabled then
             return
