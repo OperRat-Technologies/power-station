@@ -51,8 +51,8 @@ local function setup()
     lapotronicCapacity = lapotronic.getEUCapacity()
     totalEUCapacity = substationCapacity + lapotronicCapacity
 
-    turbineControl = turbine.Turbine.new(config.turbineWirelessFrequency, totalEUCapacity)
-    turbineControl.enabled = enableTurbineControl
+    turbineControl = turbine.Turbine.new(totalEUCapacity)
+    turbineControl.enabled = config.enableTurbineControl
 end
 
 local function loop()

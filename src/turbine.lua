@@ -2,14 +2,12 @@ local component = require("component")
 local config = require("config")
 
 local Turbine = {}
-Turbine.new = function(wirelessFrequency, totalEuCapacity)
+Turbine.new = function(totalEuCapacity)
     local self = {}
 
-    self.wirelessFrequency = wirelessFrequency
     self.totalEuCapacity = totalEuCapacity
     self.enabled = true
 
-    component.redstone.setWirelessFrequency(wirelessFrequency)
     component.redstone.setWirelessOutput(false)
 
     function self.updateTurbine(totalEUStored)
@@ -19,16 +17,11 @@ Turbine.new = function(wirelessFrequency, totalEuCapacity)
             
         local euPercentage = (totalEUStored / self.totalEuCapacity) * 100
             
-        if euPercentage < minPowerPercentageThreshold then
-            component.redstone.setWirelessOutput(true)
-        elseif euPercentage > maxPowerPercentageThreshold then
-            component.redstone.setWirelessOutput(false)
+        if euPercentage < config.minPowerPercentageThreshold then
+            component.redstone.setOutput(4,10) -- Fix this later to MCU network signals
+        elseif euPercentage > config.maxPowerPercentageThreshold then
+            component.redstone.setOutput(4,0) -- Fix this later to MCU network signals
         end
-    end
-
-    function self.changeFrequency(newFrequency)
-        self.wirelessFrequency = newFrequency
-        component.redstone.setWirelessFrequency(newFrequency)
     end
 
     return self
