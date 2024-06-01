@@ -8,9 +8,9 @@ local config = {
     -- Enable power output to a WR-CBE channel if the power level falls below a certain threshold
     enableAlarm = true,
     -- Power percentage threshold to activate the alarm
-    alarmPowerPercentageThreshold = 5,
+    alarmPowerPercentageThreshold = 10,
     -- Frequency to send the alarm redstone signal
-    alarmWirelessFrequency = 1015
+    alarmWirelessFrequency = 1016
 }
 
 return config
