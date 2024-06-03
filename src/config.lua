@@ -10,7 +10,7 @@ local config = {
     -- Power percentage threshold to activate the alarm
     alarmPowerPercentageThreshold = 5,
     -- Frequency to send the alarm redstone signal
-    alarmWirelessFrequency = 1016
+    alarmWirelessFrequency = 1016,
     -- Enable control over turbine via WR-CBE channel
     enableTurbineControl = true,
     -- Power percentage threshold to deactivate the turbine
