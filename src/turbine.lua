@@ -16,9 +16,9 @@ Turbine.new = function(totalEuCapacity)
         local euPercentage = (totalEUStored / self.totalEuCapacity) * 100
             
         if euPercentage < config.minPowerPercentageThreshold then
-            component.redstone.setOutput(sides.right,10) -- Fix this later to MCU network signals
+            component.redstone.setOutput(4,10) -- Fix this later to MCU network signals
         elseif euPercentage > config.maxPowerPercentageThreshold then
-            component.redstone.setOutput(sides.right,0) -- Fix this later to MCU network signals
+            component.redstone.setOutput(4,0) -- Fix this later to MCU network signals
         end
     end
 
