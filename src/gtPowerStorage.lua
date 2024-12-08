@@ -40,17 +40,17 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
     end
 
     function self.getEUCapacity()
-        return self.proxy.getEUCapacity()
+        local raw_capacity = self.sensorInfo[4]
+        local number_with_commas = string.match(raw_capacity, "%d[%d,]*")
+        return string.gsub(number_with_commas, ",", "")
     end
 
     function self.getEUAverageInput()
-        return self.extractNumberFromInformationString(self.clearSensorInformationString(self.searchSensorInformation(
-            self.inStr)))
+        return self.proxy.getEUInputAverage()
     end
 
     function self.getEUAverageOutput()
-        return self.extractNumberFromInformationString(self.clearSensorInformationString(self.searchSensorInformation(
-            self.outStr)))
+        return self.proxy.getEUOutputAverage()
     end
 
     return self
