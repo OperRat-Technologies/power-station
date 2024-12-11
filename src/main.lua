@@ -1,3 +1,5 @@
+local DEBUG = false
+
 -- Module imports
 local term = require("term")
 local component = require("component")
@@ -83,7 +85,14 @@ local function loop()
 end
 
 -- Main
+if (DEBUG) then
+   return {
+      getComponents = getComponents,
+      setup = setup,
+      loop = loop,
+   }
+end
 setup()
 while true do
-    loop()
+   loop()
 end
