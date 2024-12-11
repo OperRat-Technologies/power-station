@@ -34,6 +34,7 @@ local function getComponents()
             end
         end
     end
+    return substationProxy, lapotronicProxy
 end
 
 local function setup()
@@ -82,7 +83,15 @@ local function loop()
 end
 
 -- Main
-setup()
-while true do
-    loop()
+if (arg ~= nil and arg[-1] ~= nil) then
+   setup()
+   while true do
+       loop()
+   end
+else
+   return {
+      getComponents = getComponents,
+      setup = setup,
+      loop = loop,
+   }
 end
