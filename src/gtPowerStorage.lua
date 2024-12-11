@@ -19,6 +19,7 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
 
     function self.updateSensorInfo()
         self.sensorInfo = proxy.getSensorInformation()
+        table.sort(self.sensorInfo)
     end
 
     ---Clears colored strings
@@ -44,7 +45,7 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
     ---The maximum amount of energy that the machine can store
     ---@return number
     function self.getEUCapacity()
-        local raw_capacity = self.sensorInfo[4]
+        local raw_capacity = self.sensorInfo[15]
         local number_with_commas = string.match(raw_capacity, "%d[%d,]*")
         return self.extractNumberFromInformationString(number_with_commas)
     end
