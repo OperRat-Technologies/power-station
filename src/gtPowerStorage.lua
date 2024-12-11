@@ -45,7 +45,7 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
     ---The maximum amount of energy that the machine can store
     ---@return number
     function self.getEUCapacity()
-        local raw_capacity = self.sensorInfo[15]
+        local raw_capacity = self.searchSensorInformation("Total Capacity")
         local number_with_commas = string.match(raw_capacity, "%d[%d,]*")
         return self.extractNumberFromInformationString(number_with_commas)
     end
