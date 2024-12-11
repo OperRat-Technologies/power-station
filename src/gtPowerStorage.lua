@@ -1,12 +1,13 @@
 
 local GTPowerStorage = {}
-GTPowerStorage.new = function(proxy, inStr, outStr)
+GTPowerStorage.new = function(proxy, inStr, outStr, nameCapacity)
     local self = {}
 
     self.proxy = proxy
     self.sensorInfo = proxy.getSensorInformation()
     self.inStr = inStr
     self.outStr = outStr
+    self.nameCapacity = nameCapacity
 
     function self.searchSensorInformation(searchStr)
         for _, v in ipairs(self.sensorInfo) do
@@ -45,8 +46,11 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
     ---The maximum amount of energy that the machine can store
     ---@return number
     function self.getEUCapacity()
-        local raw_capacity = self.searchSensorInformation("Total Capacity")
+        local raw_capacity = self.searchSensorInformation(self.nameCapacity)
         local number_with_commas = string.match(raw_capacity, "%d[%d,]*")
+        if number_with_commas == nil then
+            error(string.format("Failed to extract total capacity for %s", self.proxy.getName()))
+        end
         return self.extractNumberFromInformationString(number_with_commas)
     end
 
