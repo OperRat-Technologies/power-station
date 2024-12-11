@@ -35,14 +35,18 @@ GTPowerStorage.new = function(proxy, inStr, outStr)
         return tonumber(number)
     end
 
+     ---The current amount of energy stored on the machine
+     ---@return number
     function self.getEUStored()
         return self.proxy.getEUStored()
     end
 
+    ---The maximum amount of energy that the machine can store
+    ---@return number
     function self.getEUCapacity()
         local raw_capacity = self.sensorInfo[4]
         local number_with_commas = string.match(raw_capacity, "%d[%d,]*")
-        return string.gsub(number_with_commas, ",", "")
+        return self.extractNumberFromInformationString(number_with_commas)
     end
 
     function self.getEUAverageInput()
