@@ -83,15 +83,7 @@ local function loop()
 end
 
 -- Main
-if (arg ~= nil and arg[-1] ~= nil) then
-   setup()
-   while true do
-       loop()
-   end
-else
-   return {
-      getComponents = getComponents,
-      setup = setup,
-      loop = loop,
-   }
+setup()
+while true do
+    loop()
 end
