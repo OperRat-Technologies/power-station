@@ -17,6 +17,16 @@ local config = {
     maxPowerPercentageThreshold = 80,
     -- Power percentage threshold to activate the turbine
     minPowerPercentageThreshold = 20,
+
+    -- String values that can be used to extract some data from the sensor info table
+    sensor_strings = {
+         substationAvgInput = "Average Input",
+         substationAvgOutput = "Average Output",
+         substationCapacity = "Capacity:",
+         lapotronicAvgInput = "Avg EU IN",
+         lapotronicAvgOutput = "Avg EU OUT",
+         lapotronicCapacity = "Total Capacity:",
+    }
 }
 
 return config

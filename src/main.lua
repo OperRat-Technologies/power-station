@@ -42,8 +42,18 @@ end
 local function setup()
     getComponents()
 
-    substation = gtPS.GTPowerStorage.new(substationProxy, "Average Input", "Average Output", "Capacity:")
-    lapotronic = gtPS.GTPowerStorage.new(lapotronicProxy, "Avg EU IN", "Avg EU OUT", "Total Capacity:")
+    substation = gtPS.GTPowerStorage.new(
+        substationProxy,
+        config.sensor_strings.substationAvgInput,
+        config.sensor_strings.substationAvgOutput,
+        config.sensor_strings.substationCapacity
+    )
+    lapotronic = gtPS.GTPowerStorage.new(
+        lapotronicProxy,
+        config.sensor_strings.lapotronicAvgInput,
+        config.sensor_strings.lapotronicAvgOutput,
+        config.sensor_strings.lapotronicCapacity
+    )
 
     psAlarm = alarm.Alarm.new(config.alarmWirelessFrequency, substation)
     psAlarm.enabled = config.enableAlarm

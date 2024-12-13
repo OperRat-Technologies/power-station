@@ -5,8 +5,8 @@ GTPowerStorage.new = function(proxy, inStr, outStr, nameCapacity)
 
     self.proxy = proxy
     self.sensorInfo = proxy.getSensorInformation()
-    self.inStr = inStr
-    self.outStr = outStr
+    self.nameInput = inStr
+    self.nameOutput = outStr
     self.nameCapacity = nameCapacity
 
     function self.searchSensorInformation(searchStr)
@@ -55,11 +55,13 @@ GTPowerStorage.new = function(proxy, inStr, outStr, nameCapacity)
     end
 
     function self.getEUAverageInput()
-        return self.proxy.getEUInputAverage()
+        local raw_input = self.searchSensorInformation(self.nameInput)
+        return self.extractNumberFromInformationString(raw_input)
     end
 
     function self.getEUAverageOutput()
-        return self.proxy.getEUOutputAverage()
+    local raw_output = self.searchSensorInformation(self.nameOutput)
+        return self.extractNumberFromInformationString(raw_output)
     end
 
     return self
