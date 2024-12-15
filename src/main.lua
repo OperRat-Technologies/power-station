@@ -1,3 +1,5 @@
+local DEBUG = false
+
 -- Module imports
 local term = require("term")
 local component = require("component")
@@ -34,13 +36,24 @@ local function getComponents()
             end
         end
     end
+    return substationProxy, lapotronicProxy
 end
 
 local function setup()
     getComponents()
 
-    substation = gtPS.GTPowerStorage.new(substationProxy, "Average Input", "Average Output")
-    lapotronic = gtPS.GTPowerStorage.new(lapotronicProxy, "Avg EU IN", "Avg EU OUT")
+    substation = gtPS.GTPowerStorage.new(
+        substationProxy,
+        config.sensor_strings.substationAvgInput,
+        config.sensor_strings.substationAvgOutput,
+        config.sensor_strings.substationCapacity
+    )
+    lapotronic = gtPS.GTPowerStorage.new(
+        lapotronicProxy,
+        config.sensor_strings.lapotronicAvgInput,
+        config.sensor_strings.lapotronicAvgOutput,
+        config.sensor_strings.lapotronicCapacity
+    )
 
     psAlarm = alarm.Alarm.new(config.alarmWirelessFrequency, substation)
     psAlarm.enabled = config.enableAlarm
@@ -82,7 +95,14 @@ local function loop()
 end
 
 -- Main
+if (DEBUG) then
+   return {
+      getComponents = getComponents,
+      setup = setup,
+      loop = loop,
+   }
+end
 setup()
 while true do
-    loop()
+   loop()
 end
