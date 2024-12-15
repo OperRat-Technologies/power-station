@@ -47,11 +47,9 @@ GTPowerStorage.new = function(proxy, inStr, outStr, nameCapacity)
     ---@return number
     function self.getEUCapacity()
         local raw_capacity = self.searchSensorInformation(self.nameCapacity)
-        local number_with_commas = string.match(raw_capacity, "%d[%d,]*")
-        if number_with_commas == nil then
-            error(string.format("Failed to extract total capacity for %s", self.proxy.getName()))
-        end
-        return self.extractNumberFromInformationString(number_with_commas)
+        return self.extractNumberFromInformationString(
+            self.clearSensorInformationString(raw_capacity)
+        )
     end
 
     function self.getEUAverageInput()
