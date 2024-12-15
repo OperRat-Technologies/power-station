@@ -5,15 +5,16 @@ local repo = "https://raw.githubusercontent.com/OperRat-Technologies/power-stati
 local branch
 local scripts = {
     "alarm.lua",
+    "averageValue.lua",
+    "commonInterface.lua",
     "config.lua",
+    "debug.lua",
     "gtPowerStorage.lua",
     "gui.lua",
-    "utils.lua",
     "main.lua",
-    "uninstall.lua",
-    "commonInterface.lua",
-    "averageValue.lua",
     "turbine.lua",
+    "uninstall.lua",
+    "utils.lua",
 }
 
 if #args >= 1 then
