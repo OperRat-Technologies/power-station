@@ -58,11 +58,14 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
     local lsPercentage = storage / capacity * 100
     local percentagePerLayer = 100 / layers
 
+    local fillingColors = {0x00FF00, 0xFF9200, 0xFF0000}
+    local fillingIndex = math.ceil((3 * (100 - lsPercentage)) / 100)
     local fillingC = { "▓", "▒", "░" }
     local fillingP = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
 
     local filledLayers = math.floor(lsPercentage / percentagePerLayer)
     local emptyLayers = layers - filledLayers - 1
+    gpu.setForeground(fillingColors[fillingIndex])
     gpu.fill(topX, topY + (layers - filledLayers), 5, filledLayers, "█")
 
     if (filledLayers < layers) then
@@ -82,6 +85,7 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
     if (emptyLayers > 0) then
         gpu.fill(topX, topY, 5, emptyLayers, " ")
     end
+    gpu.setForeground(0x000000)
 end
 
 ---Specialization to print the Lapotronic Supercapacitor graphic
@@ -119,7 +123,7 @@ local function printScreen(lsCapacity, lsStorage, psCapacity, psStorage, tickLif
     local diffEUAvgVal, diffEUAvgMod = utils.numToAdaptedScientificNotation(diffAvg)
     local diffEUVal, diffEUMod = utils.numToAdaptedScientificNotation(euDiff)
 
-    local untilFullyString = utils.choice(inEu > outEu, "charged   ", "discharged")
+    local untilFullyString = utils.choice(inEu > outEu, "charged      ", "discharged   ")
 
     local percentageLapotronic = (lsStorage/lsCapacity) * 100
     local percentageSubstation = (psStorage/psCapacity) * 100
