@@ -59,11 +59,11 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
     local percentagePerLayer = 100 / layers
 
     local fillingColors = {0x00FF00, 0xFF9200, 0xFF0000}
-    local fillingIndex = math.ceil((3 * (100 - lsPercentage)) / 100)
+    local fillingIndex = math.max(1, math.ceil((3 * (100 - lsPercentage)) / 100))
     local fillingC = { "▓", "▒", "░" }
     local fillingP = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
 
-    local filledLayers = math.floor(lsPercentage / percentagePerLayer)
+    local filledLayers = (lsPercentage >= 99.95) and layers or math.floor(lsPercentage / percentagePerLayer)
     local emptyLayers = layers - filledLayers - 1
     gpu.setForeground(fillingColors[fillingIndex])
     gpu.fill(topX, topY + (layers - filledLayers), 5, filledLayers, "█")
