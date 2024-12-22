@@ -55,26 +55,26 @@ local pSubstationPercentage = screen.registerParam(ci.Param(14, 45, 7, "%s"))
 ---@param topX number
 ---@param topY number
 local function printCapacityGraphic(capacity, storage, layers, topX, topY)
-    local lsPercentage = storage / capacity * 100
+    local percentage = storage / capacity * 100
     local percentagePerLayer = 100 / layers
 
     local fillingColors = {0x00FF00, 0xFF9200, 0xFF0000}
-    local fillingIndex = math.max(1, math.ceil((3 * (100 - lsPercentage)) / 100))
-    local fillingC = { "▓", "▒", "░" }
-    local fillingP = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
+    local fillingIndex = math.max(1, math.ceil((3 * (100 - percentage)) / 100))
+    local fillingChars = { "▓", "▒", "░" }
+    local fillingPercentage = { 0.66 * percentagePerLayer, 0.33 * percentagePerLayer, 0 }
 
-    local filledLayers = (lsPercentage >= 99.95) and layers or math.floor(lsPercentage / percentagePerLayer)
+    local filledLayers = (percentage >= 99.95) and layers or math.floor(percentage / percentagePerLayer)
     local emptyLayers = layers - filledLayers - 1
     gpu.setForeground(fillingColors[fillingIndex])
     gpu.fill(topX, topY + (layers - filledLayers), 5, filledLayers, "█")
 
     if (filledLayers < layers) then
-        local curPercentage = lsPercentage - (filledLayers * percentagePerLayer)
+        local currentPercentage = percentage - (filledLayers * percentagePerLayer)
         local fillingChar = "?"
 
-        for i, v in ipairs(fillingP) do
-            if (curPercentage >= v) then
-                fillingChar = fillingC[i]
+        for i, v in ipairs(fillingPercentage) do
+            if (currentPercentage >= v) then
+                fillingChar = fillingChars[i]
                 break
             end
         end
@@ -89,10 +89,10 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
 end
 
 ---Specialization to print the Lapotronic Supercapacitor graphic
----@param lsCapacity number
----@param lsStorage number
-local function printLapotronicGraphic(lsCapacity, lsStorage)
-    printCapacityGraphic(lsCapacity, lsStorage, 18, 5, 3)
+---@param capacity number
+---@param storage number
+local function printLapotronicGraphic(capacity, storage)
+    printCapacityGraphic(capacity, storage, 18, 5, 3)
 end
 
 ---Specialization to print the Power Substation graphic
