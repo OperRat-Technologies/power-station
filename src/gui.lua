@@ -70,9 +70,12 @@ local function printCapacityGraphic(capacity, storage, layers, topX, topY)
 
     if (filledLayers < layers) then
         local currentPercentage = percentage - (filledLayers * percentagePerLayer)
-        local fillingChar = "?"
+        local fillingChar = " "
 
         for i, v in ipairs(fillingPercentage) do
+            if percentage <= 0.01 then
+               break
+            end
             if (currentPercentage >= v) then
                 fillingChar = fillingChars[i]
                 break
