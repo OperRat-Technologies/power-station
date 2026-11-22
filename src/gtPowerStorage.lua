@@ -46,10 +46,7 @@ GTPowerStorage.new = function(proxy, inStr, outStr, nameCapacity)
     ---The maximum amount of energy that the machine can store
     ---@return number
     function self.getEUCapacity()
-        local raw_capacity = self.searchSensorInformation(self.nameCapacity)
-        return self.extractNumberFromInformationString(
-            self.clearSensorInformationString(raw_capacity)
-        )
+        return self.proxy.getEUCapacity()
     end
 
     function self.getEUAverageInput()
