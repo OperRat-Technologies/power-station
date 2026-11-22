@@ -50,19 +50,11 @@ GTPowerStorage.new = function(proxy, inStr, outStr, nameCapacity)
     end
 
     function self.getEUAverageInput()
-        return self.extractNumberFromInformationString(
-            self.clearSensorInformationString(
-                self.searchSensorInformation(self.nameInput)
-            )
-        )
+        return self.proxy.getAverageElectricInput()
     end
 
     function self.getEUAverageOutput()
-        return self.extractNumberFromInformationString(
-            self.clearSensorInformationString(
-                self.searchSensorInformation(self.nameOutput)
-            )
-        )
+        return self.proxy.getAverageElectricOutput()
     end
 
     return self
